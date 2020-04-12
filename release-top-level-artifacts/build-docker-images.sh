@@ -66,4 +66,12 @@ echo "  - repository: ${DOCKER_REPOSITORY_NAME}"
 echo "  - version: ${DOCKER_IMAGE_VERSION}"
 
 CURRENT_DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-#cd ${CURRENT_DIR}/k8shim && make image REGISTRY= && cd -
+cd ${CURRENT_DIR}/k8shim && \
+  make image REGISTRY=${DOCKER_REPOSITORY_NAME} \
+  VERSION=${DOCKER_IMAGE_VERSION} && \
+  cd -
+
+cd ${CURRENT_DIR}/web && \
+  make image TAG=${DOCKER_REPOSITORY_NAME}/yunikorn-web \
+  VERSION=${DOCKER_IMAGE_VERSION} && \
+  cd -

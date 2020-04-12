@@ -1,8 +1,9 @@
 import json
 import os
 import shutil
+import git
 
-def parse_configs():
+def build_release():
     tools_dir = os.path.dirname(os.path.realpath(__file__))
 
     # load configs
@@ -11,7 +12,8 @@ def parse_configs():
         data = json.load(configs)
 
     release_meta = data["release"]
-    release_package_name = "apache-yunikorn-incubating-{0}-{1}".format(release_meta["version"],release_meta["release-candidate-version"])
+    release_package_name = "apache-yunikorn-incubating-{0}-{1}".format(
+        release_meta["version"],release_meta["release-candidate-version"])
     repo_list = data["repositories"]
 
     print("release meta info:")
@@ -21,13 +23,20 @@ def parse_configs():
 
     staging_dir = os.path.join(os.path.dirname(tools_dir), "staging")
     release_base = os.path.join(staging_dir, release_package_name)
-    release_top_path = os.path.join(os.path.dirname(tools_dir), "release-top-level-artifacts")
+    release_top_path = os.path.join(os.path.dirname(tools_dir),
+        "release-top-level-artifacts")
 
     # setup artifacts in the relase base dir
     setup_base_dir(release_top_path, release_base)
 
     for repo_meta in repo_list:
-        setup_repo_artifacts(repo_meta)
+        dowload_sourcecode(release_base, repo_meta)
+
+    # download helm chart templates
+    print("creating helm chart templates")
+    charts_src = os.path.join(release_base, "k8shim", "helm-charts")
+    charts_dest = os.path.join(release_base, "helm-charts")
+    shutil.copytree(charts_src, charts_dest)
 
 def setup_base_dir(release_top_path, base_path):
     print("setting up base dir for release artifacts, path: %s" % base_path)
@@ -43,13 +52,21 @@ def setup_base_dir(release_top_path, base_path):
         print("copying files: %s ===> %s" % (org, dest))
         shutil.copyfile(org, dest)
 
-def setup_repo_artifacts(repo_meta):
-    print("setup...")
-    print(repo_meta)
-
+def dowload_sourcecode(base_path, repo_meta):
+    print("downloading source code")
+    print("repository info:")
+    print(" - repository: %s " % repo_meta["repository"])
+    print(" - description: %s " % repo_meta["description"])
+    print(" - branch: %s " % repo_meta["branch"])
+    print(" - hash: %s " % repo_meta["hash"])
+    repo = git.Repo.clone_from(
+        url=repo_meta["repository"],
+        to_path=os.path.join(base_path, repo_meta["alias"]),
+        b=repo_meta["branch"])
+    repo.git.checkout(repo_meta["hash"])
 
 def main():
-    parse_configs()
+    build_release()
 
 if __name__ == "__main__":
     main()
