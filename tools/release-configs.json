@@ -1,0 +1,23 @@
+{
+  "release": {
+    "version": "0.8.0",
+    "release-candidate-version": "rc1"
+  },
+  "repositories": [
+    {
+      "name": "yunikorn-core",
+      "alias": "core",
+      "description": "github repo for yunikorn-core",
+      "hash": "f24e3a2826f33b9836aa79980c2a3d02708099ab",
+      "repository": "https://github.com/apache/incubator-yunikorn-core",
+      "branch": "master"
+    }, {
+      "name": "yunikorn-k8shim",
+      "alias": "k8shim",
+      "description": "github repo for yunikorn-k8shim",
+      "hash": "773115f55734b4986d743245fd446ca36541698c",
+      "repository": "https://github.com/apache/incubator-yunikorn-k8shim",
+      "branch": "master"
+    }
+  ]
+}
