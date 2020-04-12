@@ -26,4 +26,10 @@ Reference:
 
 # Release Procedure
 
-## 1. Release Branches
+- Create a release branch for the target release in all git repos, such as `branch-0.8`
+- Stabilize the release branch
+- Create a tag and prepare to generate release candidate 1, e.g `release-0.8-rc1`
+- Configure `tools/release-configs.json`
+- Run script `tools/build-release.json` to generate source code tarball
+- Sign the release
+- Upload tarball for voting
