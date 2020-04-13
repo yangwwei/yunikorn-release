@@ -25,3 +25,33 @@ and cloud-native environment. YuniKorn brings a unified, cross-platform scheduli
 of stateless batch workloads and stateful services.
 
 ## Build
+
+Run the script `build-docker-images.sh` to build docker images.
+
+```shell script
+# specify the docker repo
+./build-docker-images.sh -r <REPO_NAME> -v <VERSION>
+
+# for example, the following command will
+# build 3 docker images like below:
+#  foo/yunikorn-scheduler-k8s:0.8.0
+#  foo/yunikorn-scheduler-admission-controller:0.8.0
+#  foo/yunikorn-web:0.8.0
+./build-docker-images.sh -r foo -v 0.8.0
+```
+
+## Run YuniKorn on an existing K8s cluster
+
+The simplest way to run YuniKorn is to use our helm charts,
+you can find the templates in the release package `helm-charts`.
+There are a few prerequisites:
+1. A existing K8s cluster is up and running.
+2. Helm chart client is installed.
+
+then simply run command:
+
+```shell script
+helm install ./yunikorn
+```
+
+For more instructions, please refer to [User Guide](https://github.com/apache/incubator-yunikorn-core/blob/master/docs/user-guide.md#quick-start).
